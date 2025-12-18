@@ -5,7 +5,8 @@ Nu-Metro Cinema is a fully functional movie booking web application that offers 
  Features
 	1.	Home / Movie Listings
 	
-  . a slider displaying screening movies posters
+  
+    a slider displaying screening movies posters
   
 	•	Browse currently screening and upcoming movies.
 	
@@ -46,6 +47,7 @@ Nu-Metro Cinema is a fully functional movie booking web application that offers 
 	•	Show/hide password feature for convenience.
 
 💻 Technologies Used
+	
 	•	HTML5 & CSS3– Structure, layout, and styling.
 	
 	•	JavaScript (Vanilla JS) – Dynamic content, seat selection, and local storage management.
@@ -61,29 +63,29 @@ Nu-Metro Cinema is a fully functional movie booking web application that offers 
 /project-root
 │
 
-├── index.html                  # Home page with movies & trailers
+├── index.html                                          # Home page with movies & trailers
 
-├── page.html                   # Movie details and trailer preview
+├── page.html                                           # Movie details and trailer preview
 
-├── seat2.html                  # Seat selection
+├── seat2.html                                          # Seat selection
 
-├── checkout/payment.html       # Booking checkout
+├── checkout/payment.html                               # Booking checkout
 
-├── ticket.html                 # Final ticket
+├── ticket.html                                         # Final ticket
 
-├── admin.html                  # Admin dashboard
+├── admin.html                                          # Admin dashboard
 
-├── addmovie.html               # Add/Edit movie and trailer
+├── addmovie.html                                       # Add/Edit movie and trailer
 
-├── signup.html                 # Sign-up page
+├── signup.html                                         # Sign-up page
 
-├── signin.html                 # Login page
+├── signin.html                                         # Login page
 
-├── styles.css                  # Global CSS  
+├── styles.css                                          # Global CSS  
 
-├──                            # JS for interactivity and admin functions
+├──                                                     # JS for interactivity and admin functions
 
-└── assets/                     # Posters, trailers, icons
+└── assets/                                             # Posters, trailers, icons
 
   Key Highlights
   
@@ -109,4 +111,4 @@ Nu-Metro Cinema is a fully functional movie booking web application that offers 
 
 👩‍💻 Author
 
-Annie Kawana Situmbeko – Developer of Nu-Metro Cinema Web Application
+    Annie Kawana Situmbeko – Developer of Nu-Metro Cinema Web Application
