@@ -3,6 +3,7 @@
 Nu-Metro Cinema is a fully functional movie booking web application that offers a realistic cinema experience. Users can browse movies, watch trailers, select seats, and generate tickets—all in one place. Built with HTML, CSS, and JavaScript, it demonstrates modern web development practices and interactive user features.
 
  Features
+ 
 	1.	Home / Movie Listings
 	
   
