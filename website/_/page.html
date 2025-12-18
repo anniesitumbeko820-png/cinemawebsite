@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nu-Metro Cinema | Movie Details</title>
+    <style>
+      /* ===== GENERAL STYLES ===== */
+      body {
+        margin: 0;
+        font-family: "Poppins", Arial, sans-serif;
+        background-color: #0b0c10;
+        color: #fff;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+      }
+
+      /* ===== LOGO ===== */
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .logo .n {
+        width: 42px;
+        height: 42px;
+        border: 3px solid #ff9a35;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 26px;
+        font-weight: 900;
+        color: #ff9a35;
+      }
+
+      .logo .text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ff9a35;
+      }
+
+      .back-link {
+        color: #ff9a35;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: #fff;
+      }
+
+      .yellow-line {
+        border: none;
+        height: 2px;
+        background-color: #ff9a35;
+        margin: 0 40px;
+      }
+
+      /* ===== MOVIE DETAILS ===== */
+      .movie-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        padding: 50px;
+        align-items: flex-start;
+      }
+
+      .poster img,
+      .poster video {
+        width: 320px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(255, 154, 53, 0.3);
+      }
+
+      .info {
+        flex: 1;
+        max-width: 650px;
+      }
+
+      .title {
+        font-size: 36px;
+        color: #ff9a35;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .tags {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .genre,
+      .duration {
+        background-color: #ff9a35;
+        color: #000;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .description {
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 35px;
+        color: #ddd;
+      }
+
+      /* ===== SHOWTIMES ===== */
+      .showtimes-title {
+        color: #ff9a35;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ff9a35;
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+
+      .studio-section {
+        display: flex;
+        gap: 20px;
+        flex-wrap: nowrap; /* Single row */
+      }
+
+      .studio {
+        background-color: #1c1f26;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1; /* Distribute evenly in row */
+        text-align: center;
+        box-shadow: 0 0 10px rgba(255, 154, 53, 0.1);
+        transition: transform 0.2s ease;
+      }
+
+      .studio:hover {
+        transform: scale(1.05);
+      }
+
+      .studio h4 {
+        color: #ff9a35;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+
+      .showtime p {
+        margin: 5px 0;
+        font-size: 14px;
+      }
+
+      .showtime .time {
+        color: #ff9a35;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .price {
+        color: #ff9a35;
+        font-weight: bold;
+        margin-top: 8px;
+      }
+
+      /* ===== SEAT BUTTON ===== */
+      .seat-btn {
+        background-color: #fff;
+        color: #ff9a35;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: 0.3s;
+      }
+
+      .seat-btn:hover,
+      .seat-btn:active {
+        background-color: #ff9a35;
+        color: #fff;
+      }
+
+      footer {
+        text-align: center;
+        padding: 15px 0;
+        background-color: #1c1f26;
+        color: #aaa;
+        margin-top: 50px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header>
+      <div class="logo">
+        <div class="n">N</div>
+        <div class="text">uMetro Cinema</div>
+      </div>
+      <a class="back-link" id="backToMovies">← Back to Movies</a>
+    </header>
+
+    <hr class="yellow-line" />
+
+    <!-- ===== MOVIE DETAILS ===== -->
+    <main class="movie-details">
+      <div class="poster" id="posterBox">
+        <img src="" alt="Movie Poster" id="posterImg" />
+      </div>
+
+      <div class="info">
+        <h2 class="title"></h2>
+        <div class="tags">
+          <span class="genre"></span>
+          <span class="duration"></span>
+        </div>
+        <p class="description"></p>
+
+        <h3 class="showtimes-title">Available Showtimes</h3>
+
+        <div class="studio-section">
+          <div class="studio">
+            <h4>Studio 1</h4>
+            <div class="showtime">
+              <p class="time" id="studio1Time">Loading...</p>
+              <p class="date" id="studio1Date">Loading...</p>
+              <p>120 seats available</p>
+              <p class="price">K60.00</p>
+              <button class="seat-btn">Select Seat</button>
+            </div>
+          </div>
+          <div class="studio">
+            <h4>Studio 2</h4>
+            <div class="showtime">
+              <p class="time" id="studio2Time">Loading...</p>
+              <p class="date" id="studio2Date">Loading...</p>
+              <p>120 seats available</p>
+              <p class="price">K60.00</p>
+              <button class="seat-btn">Select Seat</button>
+            </div>
+          </div>
+          <div class="studio">
+            <h4>Studio 3</h4>
+            <div class="showtime">
+              <p class="time" id="studio3Time">Loading...</p>
+              <p class="date" id="studio3Date">Loading...</p>
+              <p>120 seats available</p>
+              <p class="price">K60.00</p>
+              <button class="seat-btn">Select Seat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>©️ 2025 Nu-Metro Cinema. All rights reserved.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const movie = JSON.parse(localStorage.getItem("selectedMovie"));
+        const posterBox = document.getElementById("posterBox");
+        const posterImg = document.getElementById("posterImg");
+
+        function showPoster(url) {
+          const existingVideo = posterBox.querySelector("video");
+          if (existingVideo) {
+            existingVideo.pause();
+            existingVideo.remove();
+          }
+          posterImg.style.display = "block";
+          posterImg.src = url || "";
+        }
+
+        function showTrailer(url) {
+          const existingVideo = posterBox.querySelector("video");
+          if (existingVideo) {
+            existingVideo.pause();
+            existingVideo.remove();
+          }
+          posterImg.style.display = "none";
+
+          const video = document.createElement("video");
+          video.src = url;
+          video.controls = true;
+          video.autoplay = true;
+          video.muted = true;
+          video.style.width = "320px";
+          video.style.borderRadius = "10px";
+          video.style.boxShadow = "0 0 20px rgba(255,154,53,0.3)";
+          video.setAttribute("playsinline", "");
+          posterBox.appendChild(video);
+
+          let handled = false;
+          video.addEventListener("error", () => {
+            if (!handled) {
+              handled = true;
+              showPoster(movie.image || "");
+            }
+          });
+          video.addEventListener("ended", () => {
+            if (!handled) {
+              handled = true;
+              showPoster(movie.image || "");
+            }
+          });
+
+          const playPromise = video.play();
+          if (playPromise !== undefined) playPromise.catch(() => {});
+        }
+
+        if (movie) {
+          document.querySelector(".title").textContent =
+            movie.title || "Untitled";
+          document.querySelector(".genre").textContent = movie.genre || "";
+          document.querySelector(".duration").textContent =
+            movie.duration || "";
+          document.querySelector(".description").textContent =
+            movie.description || "No description available.";
+
+          ["studio1", "studio2", "studio3"].forEach((id) => {
+            const timeEl = document.getElementById(id + "Time");
+            const dateEl = document.getElementById(id + "Date");
+            if (timeEl) timeEl.textContent = movie.time || "Not set";
+            if (dateEl) dateEl.textContent = movie.date || "Not set";
+          });
+
+          let trailerSrc =
+            movie.trailerUrl?.trim() || movie.trailerFile?.trim() || null;
+          if (trailerSrc && /^(https?:\/\/|\/|data:)/i.test(trailerSrc))
+            showTrailer(trailerSrc);
+          else showPoster(movie.image || "");
+        } else {
+          showPoster("");
+        }
+
+        document
+          .getElementById("backToMovies")
+          .addEventListener("click", () => {
+            window.location.href = "index.html";
+          });
+
+        document.querySelectorAll(".seat-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const studioName = btn
+              .closest(".studio")
+              .querySelector("h4").textContent;
+            const time = btn
+              .closest(".showtime")
+              .querySelector(".time").textContent;
+            const date = btn
+              .closest(".showtime")
+              .querySelector(".date").textContent;
+            localStorage.setItem("selectedStudio", studioName);
+            localStorage.setItem("selectedTime", time);
+            localStorage.setItem("selectedDate", date);
+            window.location.href = "seat2.html";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

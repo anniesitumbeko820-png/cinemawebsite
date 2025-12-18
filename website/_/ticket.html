@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Generated Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        background: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+
+      canvas {
+        display: none;
+      }
+
+      #preview {
+        width: 320px;
+        border-radius: 18px;
+        box-shadow: 0 0 25px orange;
+        margin-bottom: 20px;
+      }
+
+      .msg {
+        color: orange;
+        font-family: Arial;
+        margin-bottom: 12px;
+      }
+
+      button {
+        background: orange;
+        color: black;
+        font-weight: bold;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img id="preview" />
+    <div class="msg">Preview your ticket</div>
+    <button id="saveBtn">SAVE TICKET</button>
+
+    <canvas id="ticketCanvas" width="900" height="350"></canvas>
+
+    <script>
+      // Pull data from payment.html (finalTicket)
+      const data = JSON.parse(localStorage.getItem("finalTicket"));
+
+      if (!data) {
+        alert("No ticket data found!");
+        window.location.href = "index.html";
+      }
+
+      const canvas = document.getElementById("ticketCanvas");
+      const ctx = canvas.getContext("2d");
+      const preview = document.getElementById("preview");
+      const saveBtn = document.getElementById("saveBtn");
+
+      // Movie + customer data
+      const title = data.movie || "Nu-Metro Movie";
+      const date = data.date || "Today";
+      const time = data.time || "18:00";
+      const seats = data.seats || "A1";
+      const type = data.studio || "Standard";
+      const customerName = data.customer?.fullName || "Guest";
+      const customerEmail = data.customer?.email || "guest@example.com";
+      const customerPhone = data.customer?.phone || "000000000";
+
+      //  Generate Unique Ticket Number
+      function generateTicketNumber() {
+        const random = Math.floor(100000 + Math.random() * 900000); // 6 digits
+        return "TKT-" + random;
+      }
+
+      const ticketNumber = generateTicketNumber();
+
+      // Draw background
+      ctx.fillStyle = type === "VIP" ? "#e6c15a" : "#FF8C1A";
+      ctx.fillRect(0, 0, 900, 350);
+
+      // Ticket holes
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(0, 175, 40, 0, Math.PI * 2);
+      ctx.arc(900, 175, 40, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+
+      // Left strip
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, 220, 350);
+
+      // Brand
+      ctx.fillStyle = "orange";
+      ctx.font = "bold 42px Arial";
+      ctx.fillText("NuMetro", 40, 180);
+
+      // Movie title
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 28px Arial";
+      ctx.fillText(title, 260, 90);
+
+      // Details
+      ctx.font = "22px Arial";
+      ctx.fillText("Seat(s): " + seats, 260, 140);
+      ctx.fillText("Date: " + date, 260, 180);
+      ctx.fillText("Time: " + time, 260, 220);
+      ctx.fillText("Studio: " + type, 260, 260);
+
+      //  Add Ticket Number
+      ctx.font = "bold 22px Arial";
+      ctx.fillText("Ticket No: " + ticketNumber, 260, 300);
+
+      // Customer Info
+      ctx.font = "22px Arial";
+      ctx.fillText("Name: " + customerName, 520, 140);
+      ctx.fillText("Email: " + customerEmail, 520, 180);
+      ctx.fillText("Phone: " + customerPhone, 520, 220);
+
+      // Preview image
+      const imgURL = canvas.toDataURL("image/png");
+      preview.src = imgURL;
+
+      // Save ticket
+      saveBtn.onclick = () => {
+        const a = document.createElement("a");
+        a.href = imgURL;
+        a.download = "NuMetro_Ticket.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+    </script>
+  </body>
+</html>

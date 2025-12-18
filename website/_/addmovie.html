@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Movie - Nu-Metro Cinema</title>
+    <style>
+      body {
+        background: #000;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 25px;
+      }
+
+      h1 {
+        color: #ff9a35;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border: 1px solid #ff9a35;
+        border-radius: 6px;
+        background: #111;
+        color: #fff;
+      }
+
+      button {
+        background: #fff;
+        color: #000;
+        padding: 10px 18px;
+        border-radius: 6px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #ff9a35;
+        color: #fff;
+      }
+
+      .preview {
+        max-width: 200px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      video {
+        margin-top: 10px;
+        width: 100%;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Add Movie</h1>
+
+    <form id="movieForm">
+      <input id="title" placeholder="Title" required />
+      <input id="genre" placeholder="Genre" />
+      <input id="duration" placeholder="Duration" />
+      <textarea id="description" placeholder="Description"></textarea>
+
+      <input id="trailerUrl" placeholder="Trailer URL (optional)" />
+      <input type="file" id="trailerFile" accept="video/*" />
+      <video id="videoPreview" controls></video>
+
+      <input type="date" id="date" />
+      <input type="time" id="time" />
+
+      <input type="file" id="poster" accept="image/*" required />
+      <img id="posterPreview" class="preview" />
+
+      <button type="submit">Save</button>
+      <button type="button" onclick="location.href='admin.html'">Back</button>
+    </form>
+
+    <script>
+      // GET ELEMENTS
+      const titleInput = document.getElementById("title");
+      const genreInput = document.getElementById("genre");
+      const durationInput = document.getElementById("duration");
+      const descriptionInput = document.getElementById("description");
+      const trailerUrlInput = document.getElementById("trailerUrl");
+      const posterInput = document.getElementById("poster");
+      const posterPreview = document.getElementById("posterPreview");
+      const trailerFileInput = document.getElementById("trailerFile");
+      const videoPreview = document.getElementById("videoPreview");
+      const movieForm = document.getElementById("movieForm");
+
+      // LOAD EDIT DATA IF EXISTS
+      const editData = JSON.parse(localStorage.getItem("editData"));
+      if (editData) {
+        titleInput.value = editData.title || "";
+        genreInput.value = editData.genre || "";
+        durationInput.value = editData.duration || "";
+        descriptionInput.value = editData.description || "";
+        trailerUrlInput.value = editData.trailerUrl || "";
+        date.value = editData.date || "";
+        time.value = editData.time || "";
+        if (editData.image) {
+          posterPreview.src = editData.image;
+          posterPreview.style.display = "block";
+        }
+        if (editData.trailerUrl) {
+          videoPreview.src = editData.trailerUrl;
+          videoPreview.style.display = "block";
+        }
+      }
+
+      const movieType = localStorage.getItem("movieType");
+      let movies = JSON.parse(localStorage.getItem("movies")) || [];
+      let trailers = JSON.parse(localStorage.getItem("trailers")) || [];
+      let upcoming = JSON.parse(localStorage.getItem("upcomingMovies")) || [];
+      let editIndex = localStorage.getItem("editIndex");
+
+      // POSTER PREVIEW
+      posterInput.onchange = () => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          posterPreview.src = e.target.result;
+          posterPreview.style.display = "block";
+        };
+        reader.readAsDataURL(posterInput.files[0]);
+      };
+
+      // TRAILER PREVIEW
+      trailerFileInput.onchange = () => {
+        const file = trailerFileInput.files[0];
+        if (file) {
+          const url = URL.createObjectURL(file);
+          videoPreview.src = url;
+          videoPreview.style.display = "block";
+        }
+      };
+
+      // OPTIONAL CLOUDINARY UPLOAD
+      async function uploadTrailerToCloudinary(file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "cinema_trailer");
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/video/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await res.json();
+        return data.secure_url;
+      }
+
+      // SAVE FORM
+      movieForm.onsubmit = async (e) => {
+        e.preventDefault();
+
+        let finalTrailerUrl = trailerUrlInput.value.trim();
+        if (trailerFileInput.files.length > 0) {
+          finalTrailerUrl = await uploadTrailerToCloudinary(
+            trailerFileInput.files[0]
+          );
+        }
+
+        const movieData = {
+          title: titleInput.value,
+          genre: genreInput.value,
+          duration: durationInput.value,
+          description: descriptionInput.value,
+          trailerUrl: finalTrailerUrl,
+          date: date.value,
+          time: time.value,
+          image: posterPreview.src,
+        };
+
+        if (movieType === "screening") {
+          editIndex ? (movies[editIndex] = movieData) : movies.push(movieData);
+          localStorage.setItem("movies", JSON.stringify(movies));
+        }
+        if (movieType === "trailer") {
+          editIndex
+            ? (trailers[editIndex] = movieData)
+            : trailers.push(movieData);
+          localStorage.setItem("trailers", JSON.stringify(trailers));
+        }
+        if (movieType === "upcoming") {
+          editIndex
+            ? (upcoming[editIndex] = movieData)
+            : upcoming.push(movieData);
+          localStorage.setItem("upcomingMovies", JSON.stringify(upcoming));
+        }
+
+        localStorage.removeItem("editIndex");
+        localStorage.removeItem("editData");
+        localStorage.removeItem("movieType");
+
+        location.href = "admin.html";
+      };
+    </script>
+  </body>
+</html>

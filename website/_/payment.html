@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Nu-Metro Cinema</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #0b0b0b;
+        color: white;
+        margin: 0;
+      }
+
+      /* ===== HEADER ===== */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #0b0b0b;
+        padding: 20px 50px;
+        font-weight: bold;
+        font-size: 26px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .logo .n {
+        width: 42px;
+        height: 42px;
+        border: 3px solid #ff9a35;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 26px;
+        font-weight: 900;
+        color: #ff9a35;
+      }
+
+      .logo .text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ff9a35;
+      }
+
+      .back-link {
+        font-size: 16px;
+        color: #ff9a35;
+        text-decoration: none;
+        transition: 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: #fff;
+      }
+
+      /* ===== LINES ===== */
+      .yellow-hr {
+        height: 3px;
+        width: 100%;
+        background: #ff9a35;
+        border: none;
+        margin: 0;
+      }
+
+      /* ===== CONTAINER ===== */
+      .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        padding: 0 15px;
+      }
+
+      /* ===== FORM SECTION ===== */
+      .form-section {
+        flex: 2;
+        background: #121212;
+        padding: 30px;
+        border-radius: 8px;
+      }
+
+      .form-section h2 {
+        color: #ff9a35;
+        margin-bottom: 12px;
+      }
+      .form-section h3 {
+        color: #ff9a35;
+        margin: 15px 0 8px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: none;
+        background: #1e1e1e;
+        color: white;
+      }
+
+      .error {
+        color: #ff6b6b;
+        display: none;
+        margin-bottom: 10px;
+      }
+
+      /* ===== SUMMARY ===== */
+      .summary {
+        flex: 1;
+        background: #1c1c1c;
+        padding: 25px;
+        border-radius: 8px;
+      }
+
+      .summary h3 {
+        color: #ff9a35;
+        margin-top: 0;
+      }
+      .summary p {
+        margin: 8px 0;
+        color: #ddd;
+      }
+      .total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ff9a35;
+      }
+
+      /* ===== BUTTON ===== */
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 4px;
+        background-color: #fff;
+        color: #000;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #ff9a35;
+        color: #000;
+      }
+
+      @media (max-width: 900px) {
+        .container {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo">
+        <div class="n">N</div>
+        <div class="text">uMetro</div>
+      </div>
+      <a href="seat2.html" class="back-link">← Back</a>
+    </header>
+
+    <div class="yellow-hr"></div>
+
+    <div class="container">
+      <!-- CUSTOMER FORM -->
+      <div class="form-section">
+        <h2>Complete Your Booking</h2>
+        <div class="yellow-hr" style="margin-bottom: 12px"></div>
+
+        <h3>Customer Information</h3>
+        <div id="custError" class="error"></div>
+
+        <input type="text" id="fullName" placeholder="Full Name" />
+        <input type="email" id="email" placeholder="Email Address" />
+        <input type="tel" id="phone" placeholder="Phone Number" />
+
+        <h3>Payment Method</h3>
+        ✅ <b>Pay on Arrival Only</b>
+        <p style="color: #ccc; font-size: 14px">
+          You will pay at the cinema counter when you arrive.
+        </p>
+
+        <button class="btn" id="completeBooking">Complete Booking</button>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="summary">
+        <h3>Booking Summary</h3>
+
+        <p><strong id="movieTitle"></strong></p>
+        <p id="studio"></p>
+
+        <div class="yellow-hr" style="margin: 8px 0"></div>
+
+        <p>Date: <span id="date"></span></p>
+        <p>Time: <span id="time"></span></p>
+        <p>Seats: <span id="seats"></span></p>
+        <p>Quantity: <span id="quantity"></span></p>
+        <p>Price per Ticket: K<span id="pricePerSeat"></span></p>
+
+        <div class="yellow-hr" style="margin: 8px 0"></div>
+
+        <p class="total">Total: K<span id="totalAmount"></span></p>
+      </div>
+    </div>
+
+    <script>
+      function loadSummary() {
+        document.getElementById("movieTitle").textContent =
+          localStorage.getItem("checkoutMovie");
+        document.getElementById("studio").textContent =
+          localStorage.getItem("checkoutStudio");
+        document.getElementById("date").textContent =
+          localStorage.getItem("checkoutDate");
+        document.getElementById("time").textContent =
+          localStorage.getItem("checkoutTime");
+        document.getElementById("seats").textContent =
+          localStorage.getItem("checkoutSeats");
+
+        const seats = localStorage.getItem("checkoutSeats") || "";
+        document.getElementById("quantity").textContent = seats
+          ? seats.split(",").length
+          : 0;
+
+        document.getElementById("pricePerSeat").textContent =
+          localStorage.getItem("checkoutPricePerSeat");
+        document.getElementById("totalAmount").textContent =
+          localStorage.getItem("checkoutTotal");
+      }
+      loadSummary();
+
+      document
+        .getElementById("completeBooking")
+        .addEventListener("click", function () {
+          let error = document.getElementById("custError");
+          error.style.display = "none";
+
+          const fullName = document.getElementById("fullName").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const phone = document.getElementById("phone").value.trim();
+
+          if (!fullName || !email || !phone) {
+            error.textContent = "Please fill in all customer details.";
+            error.style.display = "block";
+            return;
+          }
+
+          const booking = {
+            movie: localStorage.getItem("checkoutMovie"),
+            studio: localStorage.getItem("checkoutStudio"),
+            date: localStorage.getItem("checkoutDate"),
+            time: localStorage.getItem("checkoutTime"),
+            seats: localStorage.getItem("checkoutSeats"),
+            total: localStorage.getItem("checkoutTotal"),
+            customer: { fullName, email, phone },
+            paymentMethod: "Pay on Arrival",
+          };
+
+          localStorage.setItem("finalTicket", JSON.stringify(booking));
+          window.location.href = "ticket.html";
+        });
+    </script>
+  </body>
+</html>

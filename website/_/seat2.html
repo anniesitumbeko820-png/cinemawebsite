@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nu-Metro Cinema - Seat Selection</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #0b0b0b;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #0b0b0b;
+        padding: 20px 50px;
+        position: relative;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: bold;
+      }
+
+      .logo .n {
+        width: 42px;
+        height: 42px;
+        border: 3px solid #ff9a35;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 26px;
+        font-weight: 900;
+        color: #ff9a35;
+      }
+
+      .logo .text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ff9a35;
+      }
+
+      .back-link {
+        font-size: 16px;
+        color: #ff9a35;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        background-color: #121212;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0px 0px 15px rgba(255, 154, 53, 0.2);
+      }
+
+      .details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #ddd;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .yellow-line {
+        height: 4px;
+        background-color: #ff9a35;
+        border: none;
+        margin-bottom: 25px;
+        border-radius: 5px;
+      }
+
+      .main-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .screen {
+        background-color: #ff9a35;
+        color: #000;
+        text-align: center;
+        padding: 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        width: 70%;
+        margin: 0 auto 20px auto;
+      }
+
+      .seat-area {
+        flex: 1;
+        text-align: center;
+        min-width: 420px;
+      }
+
+      .seat-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 6px 0;
+      }
+
+      .row-label {
+        font-weight: bold;
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+        color: #ff9a35;
+      }
+
+      .seat {
+        width: 36px;
+        height: 45px;
+        background-color: #244163;
+        border-radius: 14px 14px 8px 8px;
+        text-align: center;
+        line-height: 45px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 4px;
+        transition: 0.2s;
+        border: 1px solid #1c2a38;
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      .seat.vip {
+        background-color: #ff9900;
+        color: #000;
+      }
+
+      .seat.reserved {
+        background-color: #555;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .seat:hover:not(.reserved) {
+        background-color: #3c587b;
+      }
+
+      .seat.selected {
+        background-color: #ff9a35;
+        color: #000;
+        border-color: #ff9a35;
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+        gap: 25px;
+        font-size: 14px;
+      }
+
+      .legend span {
+        width: 15px;
+        height: 15px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      .available-color {
+        background-color: #244163;
+      }
+      .selected-color {
+        background-color: #ff9a35;
+      }
+      .vip-color {
+        background-color: #ff9900;
+      }
+      .reserved-color {
+        background-color: #555;
+      }
+
+      .summary {
+        background-color: #1c1c1c;
+        border-radius: 6px;
+        padding: 20px;
+        width: 280px;
+        margin-left: 40px;
+        height: fit-content;
+        box-shadow: 0px 0px 10px rgba(255, 154, 53, 0.1);
+        min-width: 260px;
+      }
+
+      .summary h3 {
+        color: #ff9a35;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 20px;
+      }
+
+      .summary p {
+        margin: 10px 0;
+        font-size: 15px;
+        color: #ccc;
+      }
+      .summary span {
+        color: #fff;
+        font-weight: bold;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        background-color: #ffffff;
+        color: #000;
+        text-align: center;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 15px;
+        font-size: 16px;
+        transition: 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #ff9a35;
+        color: #000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo">
+        <div class="n">N</div>
+        <div class="text">uMetro</div>
+      </div>
+      <a href="page.html" class="back-link">← Back to Movies</a>
+    </header>
+
+    <div class="container">
+      <div class="details">
+        <div>Movie: <span id="movie-name"></span></div>
+        <div>Studio: <span id="studio-name"></span></div>
+        <div>Time: <span id="movie-time"></span></div>
+        <div>Date: <span id="movie-date"></span></div>
+      </div>
+
+      <hr class="yellow-line" />
+
+      <div class="main-section">
+        <div class="seat-area">
+          <div class="screen">SCREEN</div>
+          <div id="seats-container"></div>
+
+          <div class="legend">
+            <div><span class="available-color"></span> Available</div>
+            <div><span class="vip-color"></span>Booked</div>
+          </div>
+        </div>
+
+        <div class="summary">
+          <h3>Booking Summary</h3>
+          <p>Selected Seats: <span id="selected-seats">None</span></p>
+          <p>Price per seat: K<span id="price-per-seat">60.00</span></p>
+          <p>Total: K<span id="total-price">00.00</span></p>
+          <button id="proceedToPayment" class="btn">Proceed to ticket</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const seatsContainer = document.getElementById("seats-container");
+        const selectedSeatsDisplay = document.getElementById("selected-seats");
+        const totalPriceDisplay = document.getElementById("total-price");
+        const pricePerSeat = 60.0;
+        let selectedSeats = [];
+
+        const rows = [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+        ];
+        const seatsPerRow = 10;
+
+        rows.forEach((row) => {
+          const rowDiv = document.createElement("div");
+          rowDiv.classList.add("seat-row");
+
+          const label = document.createElement("span");
+          label.classList.add("row-label");
+          label.textContent = row;
+          rowDiv.appendChild(label);
+
+          for (let i = 1; i <= seatsPerRow; i++) {
+            const seat = document.createElement("div");
+            seat.classList.add("seat");
+            seat.textContent = i;
+            seat.dataset.seat = row + i;
+
+            seat.addEventListener("click", () => {
+              seat.classList.toggle("selected");
+              const seatId = seat.dataset.seat;
+
+              if (selectedSeats.includes(seatId)) {
+                selectedSeats = selectedSeats.filter((s) => s !== seatId);
+              } else {
+                selectedSeats.push(seatId);
+              }
+
+              selectedSeatsDisplay.textContent = selectedSeats.length
+                ? selectedSeats.join(", ")
+                : "None";
+
+              totalPriceDisplay.textContent = (
+                selectedSeats.length * pricePerSeat
+              ).toFixed(2);
+            });
+
+            rowDiv.appendChild(seat);
+          }
+
+          seatsContainer.appendChild(rowDiv);
+        });
+
+        // Load movie, studio, time, date dynamically
+        const movieData = JSON.parse(
+          localStorage.getItem("selectedMovie") || "{}"
+        );
+        const movieTitle = movieData.title || "N/A";
+        const studio = localStorage.getItem("selectedStudio") || "N/A";
+        const time = localStorage.getItem("selectedTime") || "N/A";
+        const date = localStorage.getItem("selectedDate") || "N/A";
+
+        document.getElementById("movie-name").textContent = movieTitle;
+        document.getElementById("studio-name").textContent = studio;
+        document.getElementById("movie-time").textContent = time;
+        document.getElementById("movie-date").textContent = date;
+
+        document
+          .getElementById("proceedToPayment")
+          .addEventListener("click", () => {
+            if (selectedSeats.length === 0) {
+              alert("Please select at least one seat.");
+              return;
+            }
+
+            const total = (selectedSeats.length * pricePerSeat).toFixed(2);
+            const quantity = selectedSeats.length;
+
+            localStorage.setItem("checkoutMovie", movieTitle);
+            localStorage.setItem("checkoutStudio", studio);
+            localStorage.setItem("checkoutTime", time);
+            localStorage.setItem("checkoutDate", date);
+            localStorage.setItem("checkoutSeats", selectedSeats.join(", "));
+            localStorage.setItem("checkoutQuantity", quantity);
+            localStorage.setItem(
+              "checkoutPricePerSeat",
+              pricePerSeat.toFixed(2)
+            );
+            localStorage.setItem("checkoutTotal", total);
+
+            window.location.href = "payment.html";
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Nu-Metro Cinema</title>
+    <style>
+      body {
+        background: #000;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #ff9a35;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* BUTTON STYLES */
+      button {
+        padding: 8px 16px;
+        margin: 5px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      button.add {
+        background: #ff9a35;
+        color: #fff;
+      }
+      button.edit {
+        background: #fff;
+        color: #000;
+      }
+      button.delete {
+        background: #000;
+        color: #ff9a35;
+        border: 1px solid #ff9a35;
+      }
+      button.back {
+        background: #111;
+        color: #ff9a35;
+        border: 1px solid #ff9a35;
+      }
+
+      /* TABLE STYLES */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ff9a35;
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background: #111;
+      }
+      tr:nth-child(even) {
+        background: #222;
+      }
+
+      /* HEADER BUTTONS */
+      .header-buttons {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Admin Dashboard</h1>
+
+    <!-- BACK TO SITE -->
+    <div class="header-buttons">
+      <button class="back" onclick="location.href='index.html'">
+        ← Back to Site
+      </button>
+    </div>
+
+    <!-- ADD MOVIE BUTTONS -->
+    <div class="header-buttons">
+      <button class="add" onclick="addMovie('screening')">
+        Add Screening Movie
+      </button>
+      <button class="add" onclick="addMovie('trailer')">Add Trailer</button>
+      <button class="add" onclick="addMovie('upcoming')">
+        Add Upcoming Movie
+      </button>
+    </div>
+
+    <!-- SCREENING MOVIES TABLE -->
+    <h2>Screening Movies</h2>
+    <table id="screeningTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Duration</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- TRAILERS TABLE -->
+    <h2>Trailers</h2>
+    <table id="trailersTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- UPCOMING MOVIES TABLE -->
+    <h2>Upcoming Movies</h2>
+    <table id="upcomingTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      // LOAD DATA FROM LOCALSTORAGE
+      let movies = JSON.parse(localStorage.getItem("movies")) || [];
+      let trailers = JSON.parse(localStorage.getItem("trailers")) || [];
+      let upcoming = JSON.parse(localStorage.getItem("upcomingMovies")) || [];
+
+      // RENDER ALL TABLES
+      function renderTables() {
+        const screeningBody = document.querySelector("#screeningTable tbody");
+        const trailersBody = document.querySelector("#trailersTable tbody");
+        const upcomingBody = document.querySelector("#upcomingTable tbody");
+
+        // Screening Movies
+        screeningBody.innerHTML = "";
+        movies.forEach((m, i) => {
+          screeningBody.innerHTML += `
+        <tr>
+          <td>${m.title}</td>
+          <td>${m.genre}</td>
+          <td>${m.duration}</td>
+          <td>
+            <button class="edit" onclick="editMovie('screening', ${i})">Edit</button>
+            <button class="delete" onclick="deleteMovie('screening', ${i})">Delete</button>
+          </td>
+        </tr>`;
+        });
+
+        // Trailers
+        trailersBody.innerHTML = "";
+        trailers.forEach((t, i) => {
+          trailersBody.innerHTML += `
+        <tr>
+          <td>${t.title}</td>
+          <td>${t.genre}</td>
+          <td>
+            <button class="edit" onclick="editMovie('trailer', ${i})">Edit</button>
+            <button class="delete" onclick="deleteMovie('trailer', ${i})">Delete</button>
+          </td>
+        </tr>`;
+        });
+
+        // Upcoming Movies
+        upcomingBody.innerHTML = "";
+        upcoming.forEach((u, i) => {
+          upcomingBody.innerHTML += `
+        <tr>
+          <td>${u.title}</td>
+          <td>${u.genre}</td>
+          <td>${u.date}</td>
+          <td>
+            <button class="edit" onclick="editMovie('upcoming', ${i})">Edit</button>
+            <button class="delete" onclick="deleteMovie('upcoming', ${i})">Delete</button>
+          </td>
+        </tr>`;
+        });
+      }
+
+      // ADD MOVIE
+      function addMovie(type) {
+        localStorage.setItem("movieType", type);
+        localStorage.removeItem("editIndex");
+        localStorage.removeItem("editData");
+        window.location.href = "addmovie.html";
+      }
+
+      // EDIT MOVIE
+      function editMovie(type, index) {
+        let data;
+        if (type === "screening") data = movies[index];
+        if (type === "trailer") data = trailers[index];
+        if (type === "upcoming") data = upcoming[index];
+
+        localStorage.setItem("editIndex", index);
+        localStorage.setItem("editData", JSON.stringify(data));
+        localStorage.setItem("movieType", type);
+        window.location.href = "addmovie.html";
+      }
+
+      // DELETE MOVIE
+      function deleteMovie(type, index) {
+        if (!confirm("Are you sure you want to delete this item?")) return;
+
+        if (type === "screening") {
+          movies.splice(index, 1);
+          localStorage.setItem("movies", JSON.stringify(movies));
+        }
+        if (type === "trailer") {
+          trailers.splice(index, 1);
+          localStorage.setItem("trailers", JSON.stringify(trailers));
+        }
+        if (type === "upcoming") {
+          upcoming.splice(index, 1);
+          localStorage.setItem("upcomingMovies", JSON.stringify(upcoming));
+        }
+        renderTables();
+      }
+
+      // INITIAL RENDER
+      renderTables();
+    </script>
+  </body>
+</html>
